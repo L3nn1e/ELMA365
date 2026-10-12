@@ -1,0 +1,11 @@
+[Unit]
+Description=ELMA prod: nightly elma365-backupper at 23:30 (must end before elma-sleep at 01:00)
+
+[Timer]
+OnCalendar=*-*-* 23:30:00
+AccuracySec=1s
+Unit=elma-backupper@prod.service
+# Persistent не включаем: иначе после простоя хоста бэкап (с остановкой ELMA) сработает днём
+
+[Install]
+WantedBy=timers.target

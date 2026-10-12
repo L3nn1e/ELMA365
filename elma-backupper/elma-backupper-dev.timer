@@ -1,0 +1,12 @@
+[Unit]
+Description=ELMA dev: nightly elma365-backupper at 23:30, after prod (shared lock)
+
+[Timer]
+# на 30 с позже prod: prod берёт lock первым, dev ждёт его окончания
+OnCalendar=*-*-* 23:30:30
+AccuracySec=1s
+Unit=elma-backupper@dev.service
+# Persistent не включаем: иначе после простоя хоста бэкап (с остановкой ELMA) сработает днём
+
+[Install]
+WantedBy=timers.target

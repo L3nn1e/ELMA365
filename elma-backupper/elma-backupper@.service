@@ -1,0 +1,20 @@
+[Unit]
+Description=ELMA %i: nightly elma365-backupper (backup all) via elma-backupper-run.sh
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+SyslogIdentifier=elma-backupper
+# kubectl и бэкаперу нужен HOME; KUBECONFIG всё равно задан явно в конфигах
+Environment=HOME=/root
+ExecStart=/usr/local/sbin/elma-backupper-run.sh %i
+# lock до 1.5 ч + работа не дольше, чем до END_BY (00:55) + запас
+TimeoutStartSec=4h
+# SIGTERM получает только обёртка: её trap сам гасит бэкапер и возвращает реплики
+KillMode=mixed
+TimeoutStopSec=10min
+# не мешать мастеру Kubernetes
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
